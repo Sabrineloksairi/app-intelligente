@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+.pytest_cache/
+
+# Environnements virtuels
+venv/
+.venv/
+env/
+
+# Secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Éditeurs et système
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
