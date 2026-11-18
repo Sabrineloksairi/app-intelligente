@@ -14,7 +14,7 @@ Dépôt de groupe du module **Développement et déploiement d'applications inte
 ## Organisation du dépôt
 
 ```text
-Appintelligence/
+app-intelligente/
 ├── README.md
 ├── .gitignore
 ├── projet/                       ← travail commun du projet
@@ -50,8 +50,8 @@ git config --global user.name "Prénom Nom"
 git config --global user.email "email-du-compte-github@exemple.com"
 
 cd $HOME\Documents
-git clone https://github.com/Sabrineloksairi/Appintelligence.git
-cd Appintelligence
+git clone https://github.com/Sabrineloksairi/app-intelligente.git
+cd app-intelligente
 ```
 
 ### À chaque dépôt
@@ -59,7 +59,7 @@ cd Appintelligence
 L'exemple ci-dessous correspond à Aya pour le TP1. Remplacer `tp1` et `haffari` par le bon TP et le bon dossier.
 
 ```powershell
-cd $HOME\Documents\Appintelligence
+cd $HOME\Documents\app-intelligente
 
 # 1. Récupérer le travail des autres
 git pull --rebase origin main
