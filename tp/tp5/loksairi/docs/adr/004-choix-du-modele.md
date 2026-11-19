@@ -23,7 +23,7 @@ L'équipe de maintenance doit inspecter les machines signalées par MaintAI. Une
 Nous retenons la **régression logistique avec `C = 1.0` et un seuil d'alerte de 0.2** (option 2), car c'est le run qui manque le moins de pannes : 83,8 % des pannes du jeu de test sont détectées.
 
 - Run MLflow : `4e9de5c730f54326a000f45c90a443ae`
-- Version des données : `data_md5 = 73e0b7cb3c6f795c70c3ddf970b99c15` (fichier `data/sensors.csv.dvc`, commit `33f9244` « Données v1 »)
+- Version des données : `data_md5 = 73e0b7cb3c6f795c70c3ddf970b99c15` (fichier `data/sensors.csv.dvc`, commit `e828aeb` « Données v1 »)
 
 ## Conséquences
 - **Ce que nous acceptons :** plus de fausses alertes. La précision passe de 0.622 à 0.543 : environ une alerte sur deux est une fausse alerte, ce qui augmente la charge d'inspection.

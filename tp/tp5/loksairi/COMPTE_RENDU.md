@@ -103,8 +103,8 @@ DVC voit que le fichier ne correspond plus au reçu enregistré dans Git.
 
 | Version | Commit Git (`git log --oneline`) | md5 (8 premiers caractères) | Nombre de lignes |
 |---|---|---|---|
-| v1 | `33f9244` Données v1 | `73e0b7cb` | 5000 |
-| v2 | `0130b58` Données v2 | `93fdeef2` | 8000 |
+| v1 | `e828aeb` Données v1 | `73e0b7cb` | 5000 |
+| v2 | `659a9fc` Données v2 | `93fdeef2` | 8000 |
 
 Revenez à la v1 (`git checkout <commit> -- data/sensors.csv.dvc`, puis `dvc checkout`). Combien de lignes contient `data/sensors.csv` ? Puis revenez à la v2.
 
@@ -133,7 +133,7 @@ Non. Le run v2 a une meilleure précision (0.650 contre 0.622), mais un recall u
 
 ## 5. Décision : l'ADR 004
 
-Dans `docs/adr/004-choix-du-modele.md` : régression logistique, `C = 1.0`, seuil 0.2, choisie pour son recall de 0.838. Run MLflow : `4e9de5c730f54326a000f45c90a443ae` ; données : `data_md5 = 73e0b7cb3c6f795c70c3ddf970b99c15` (v1, commit `33f9244`).
+Dans `docs/adr/004-choix-du-modele.md` : régression logistique, `C = 1.0`, seuil 0.2, choisie pour son recall de 0.838. Run MLflow : `4e9de5c730f54326a000f45c90a443ae` ; données : `data_md5 = 73e0b7cb3c6f795c70c3ddf970b99c15` (v1, commit `e828aeb`).
 
 ## 6. Questions de compréhension
 
