@@ -223,6 +223,7 @@ Dernière ligne de `python -m pytest` avec `headers=HEADERS` :
 - Le tag `tp2` existe sur GitHub : oui (créé par Sabrine Loksairi après la fusion de la PR)
 - PR relue par : Sabrine Loksairi (relecture de `tp/tp2/haffari`)
 - Réciproquement, j'ai relu `tp/tp2/loksairi` : 23 passed (dataset, entraînement et tests lancés), aucun `.env`, `.venv`, `models` ni CSV, ADR 003 présent, puis approbation de la PR #2
+-  `git status` avant le commit : le fichier `.env` apparaissait-il ? non (la ligne `.env` est dans `.gitignore`, vérifié avec `Select-String -Path .gitignore -Pattern "^\.env"` : `.gitignore:7:.env`). Seul `.env.example`, sans secret, est déposé.
 ## 9. Ce qui reste flou
 
 CORS : je comprends que le navigateur bloque la réponse, mais je suis moins sûre du déroulement exact de la requête « preflight » (OPTIONS) avant le vrai POST.
