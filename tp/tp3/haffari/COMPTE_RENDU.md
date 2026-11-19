@@ -164,8 +164,10 @@ CORS est une règle appliquée par le navigateur. Dans la page HTML du TP2, c'es
 
 ## 6. Le rendu Git
 
-- Lien de la pull request : À COMPLÉTER
-- Le tag `tp3` existe sur GitHub : À COMPLÉTER (oui / non)
+- Lien de la pull request : https://github.com/Sabrineloksairi/app-intelligente/pull/3 (PR commune du groupe pour le TP3, branche `tp3`)
+- Le tag `tp3` existe sur GitHub : oui (créé par Sabrine Loksairi après la fusion de la PR)
+- PR relue par : Sabrine Loksairi (relecture de `tp/tp3/haffari`, puis approbation)
+- Réciproquement, j'ai relu `tp/tp3/loksairi` : 23 passed (dataset, entraînement et tests lancés), aucun `.env`, modèle ni CSV, puis approbation de la PR #3
 - `git status` avant le commit : `.env`, `data/` ou `models/` apparaissaient-ils ? non (ils sont exclus par le `.gitignore`)
 
 ## 7. Ce qui reste flou
