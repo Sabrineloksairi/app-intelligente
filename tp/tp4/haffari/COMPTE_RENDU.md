@@ -148,8 +148,9 @@ Le modèle est un objet scikit-learn sauvegardé avec joblib : il n'est garanti 
 
 ## 5. Le rendu Git
 
-- Lien de la pull request : À COMPLÉTER
-- Le tag `tp4` existe sur GitHub : À COMPLÉTER (oui / non)
+- Lien de la pull request : https://github.com/Sabrineloksairi/app-intelligente/pull/4 (PR commune du groupe pour le TP4, branche `tp4`)
+- Le tag `tp4` existe sur GitHub : oui (créé par Sabrine Loksairi après la fusion de la PR)
+- PR relue par : Sabrine Loksairi (relecture de `tp/tp4/haffari`, puis approbation)
 - `git status` avant le commit : `dist/`, `build/` ou `maintai.egg-info/` apparaissaient-ils ? non (exclus par le `.gitignore` du starter)
 
 ## 6. Ce qui reste flou
