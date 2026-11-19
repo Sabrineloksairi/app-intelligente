@@ -32,4 +32,4 @@ Le travail complet est dans [`loksairi/COMPTE_RENDU.md`](loksairi/COMPTE_RENDU.m
 
 ## Ce qui reste flou
 
-À compléter par Sabrine.
+Je ne sais pas encore comment choisir le meilleur seuil de décision sans utiliser le jeu de test. Je me demande aussi si le modèle resterait aussi performant sur de vraies machines, car les données du TP sont synthétiques.
