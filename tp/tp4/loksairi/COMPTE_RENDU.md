@@ -1,4 +1,4 @@
-﻿# Compte rendu · TP4 : MaintAI devient un package Python
+# Compte rendu · TP4 : MaintAI devient un package Python
 
 **Groupe :** Sabrine Loksairi, Aya Haffari, Mohamed Amine Farih, Yasser Rais  ·  **Rédigé par :** Sabrine Loksairi  ·  **Date :** 19/11/2026
 
@@ -146,9 +146,10 @@ Relire un modèle avec une autre version de scikit-learn peut donner des résult
 
 ## 5. Le rendu Git
 
-- Lien de la pull request : à compléter après son ouverture
-- Le tag `tp4` existe sur GitHub : à compléter après la fusion
+- Lien de la pull request : https://github.com/Sabrineloksairi/app-intelligente/pull/4
+- Le tag `tp4` existe sur GitHub : oui, créé sur `main` juste après la fusion de la pull request #4
 - `git status` avant le commit : `dist/`, `build/` ou `maintai.egg-info/` apparaissaient-ils ? non
+- Relecture : Aya Haffari a relu et approuvé mon dossier. Son commentaire : « Relecture du dossier tp/tp4/loksairi : tests lancés (27 passed), dataset et entraînement OK, installation du package OK, pyproject.toml et cli.py relus, aucun dist, build, egg-info, .env ni modèle. Approuvé. » J'ai relu son dossier `tp/tp4/haffari` sur la même pull request (27 passed).
 
 ## 6. Ce qui reste flou
 
