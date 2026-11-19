@@ -19,7 +19,7 @@ app-intelligente/
 ├── .gitignore
 ├── projet/                       ← travail commun du projet
 └── tp/
-    ├── COMPTE_RENDU_MODELE.md    ← modèle à copier pour chaque TP
+    ├── COMPTE_RENDU_MODELE.md    ← modèle à copier si le TP n'en fournit pas
     ├── tp0/
     │   ├── loksairi/
     │   ├── haffari/
@@ -33,11 +33,11 @@ app-intelligente/
 
 ## Règles de dépôt
 
-1. Chaque membre dépose son travail **uniquement dans son dossier**. Exemple pour Aya et le TP1 : `tp/tp1/haffari/`.
-2. Chaque dossier de TP contient **le code du TP et son compte rendu** (`COMPTE_RENDU.md` ou `COMPTE_RENDU.pdf`).
-3. Les captures d'écran vont dans un sous-dossier `captures/`.
-4. Ne jamais déposer de mot de passe, de clé d'API, de fichier `.env` ni d'environnement virtuel (`venv/`, `.venv/`).
-5. GitHub refuse les fichiers de plus de 100 Mo : pour un gros modèle ou jeu de données, mettre un lien dans le compte rendu.
+1. À partir du TP1, chaque TP est rendu sur **une branche commune** (`tp1`, `tp2`, etc.), par **une pull request relue par un membre du groupe**, puis avec **un tag** (`tp1`, `tp2`, etc.).
+2. Chaque membre dépose son travail **uniquement dans son dossier**. Exemple pour Aya et le TP3 : `tp/tp3/haffari/`.
+3. Chaque dossier de TP contient **le code du TP et son compte rendu**.
+4. Les captures d'écran vont dans un sous-dossier `captures/`.
+5. Ne jamais déposer de `.env`, de mot de passe, de clé d'API, d'environnement virtuel (`.venv/`), de données (`data/*.csv`) ni de modèle (`models/`).
 
 ## Déposer son travail (PowerShell)
 
@@ -54,35 +54,59 @@ git clone https://github.com/Sabrineloksairi/app-intelligente.git
 cd app-intelligente
 ```
 
-### À chaque dépôt
+### À chaque TP
 
-L'exemple ci-dessous correspond à Aya pour le TP1. Remplacer `tp1` et `haffari` par le bon TP et le bon dossier.
+L'exemple ci-dessous correspond à Aya pour le TP3. Remplacer `tp3` et `haffari` par le bon TP et le bon dossier.
 
 ```powershell
 cd $HOME\Documents\app-intelligente
 
-# 1. Récupérer le travail des autres
-git pull --rebase origin main
+# 1. Se placer sur la branche du TP
+git switch main
+git pull
+git fetch origin
+git switch tp3                    # si la branche existe déjà
+# git switch -c tp3               # seulement si elle n'existe pas encore
 
-# 2. Copier ses fichiers dans son dossier (ou le faire depuis l'explorateur)
-Copy-Item -Recurse "C:\chemin\vers\mon_tp1\*" "tp\tp1\haffari\"
-
-# Si le TP copié contenait son propre dépôt Git, retirer ce dossier caché de la copie
-Remove-Item -Recurse -Force "tp\tp1\haffari\.git" -ErrorAction SilentlyContinue
+# 2. Copier son travail dans son dossier (ou le faire depuis l'explorateur)
+Copy-Item -Recurse "C:\chemin\vers\mon_tp3\*" "tp\tp3\haffari\"
 
 # 3. Enregistrer uniquement son dossier
-git add tp/tp1/haffari
-git status
-git commit -m "TP1 - Haffari : code et compte rendu"
+git add tp/tp3/haffari
+git status                        # .env, .venv, models et les CSV ne doivent pas apparaître
+git commit -m "TP3 - Haffari : code et compte rendu"
 
 # 4. Envoyer sur GitHub
-git pull --rebase origin main
-git push origin main
+git push -u origin tp3
+```
+
+Si `git push` affiche `rejected` ou `fetch first`, un autre membre vient de déposer :
+
+```powershell
+git pull --rebase origin tp3
+git push -u origin tp3
+```
+
+### Rendre le TP
+
+Quand les quatre membres ont déposé leur travail sur la branche :
+
+1. Sur GitHub, un membre ouvre **une pull request** de `tp3` vers `main`.
+2. Un autre membre lance les tests, relit les changements, écrit au moins un commentaire et clique sur **Approve**.
+3. La pull request est fusionnée avec **Create a merge commit**.
+4. Un seul membre crée le tag :
+
+```powershell
+git switch main
+git pull
+git tag tp3
+git push --tags
 ```
 
 ### Problèmes fréquents
 
 | Message ou situation | Solution |
 |---|---|
-| `rejected` ou `fetch first` au moment du push | Un autre membre vient de déposer : relancer `git pull --rebase origin main`, puis `git push origin main`. |
+| `rejected` ou `fetch first` au moment du push | Lancer `git pull --rebase origin <branche>`, puis `git push`. |
+| `ModuleNotFoundError` | Activer le `.venv` du dossier du TP dans ce terminal. |
 | `Permission denied` ou `403` | L'invitation au dépôt n'a pas été acceptée, ou le compte connecté n'est pas le bon. |
