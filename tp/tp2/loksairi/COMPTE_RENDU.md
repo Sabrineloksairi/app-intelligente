@@ -208,11 +208,11 @@ Dernière ligne de `python -m pytest` avec `headers=HEADERS` :
 
 ## 8. Le rendu Git
 
-- Lien de la pull request : à compléter après son ouverture
-- Le tag `tp2` existe sur GitHub : à compléter après la fusion
+- Lien de la pull request : https://github.com/Sabrineloksairi/app-intelligente/pull/2
+- Le tag `tp2` existe sur GitHub : oui, créé sur `main` juste après la fusion de la pull request #2
 - `git status` avant le commit : le fichier `.env` apparaissait-il ? non
 - Qui a relu la pull request, et quel commentaire a-t-il laissé ?
-  À compléter après la relecture
+  Aya Haffari l'a relue et approuvée. Son commentaire : « Tests lancés sur mon PC (après `python -m maintai.dataset` et `python -m maintai.train`) : 23 passed. Aucun `.venv`, dossier `models`, fichier `.csv` ni `.env` dans Files changed (seulement `.env.example`). `docs/adr/003-securite.md` justifie l'en-tête `X-API-Key` et la liste explicite d'origines CORS. `COMPTE_RENDU.md` est rempli. »
 
 ## 9. Ce qui reste flou
 
