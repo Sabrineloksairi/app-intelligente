@@ -151,9 +151,10 @@ CORS est une règle appliquée par le navigateur au JavaScript d'une page. Ici, 
 
 ## 6. Le rendu Git
 
-- Lien de la pull request : à compléter après son ouverture
-- Le tag `tp3` existe sur GitHub : à compléter après la fusion
+- Lien de la pull request : https://github.com/Sabrineloksairi/app-intelligente/pull/3
+- Le tag `tp3` existe sur GitHub : oui, créé sur `main` juste après la fusion de la pull request #3
 - `git status` avant le commit : `.env`, `data/` ou `models/` apparaissaient-ils ? non
+- Relecture : Aya Haffari a relu et approuvé mon dossier. Son commentaire : « Relecture du dossier tp/tp3/loksairi : tests lancés (23 passed), dataset et entraînement OK, client.py et ui/app.py relus, captures présentes, aucun .env, modèle ni CSV. Approuvé. » J'ai relu son dossier `tp/tp3/haffari` sur la même pull request (23 passed).
 
 ## 7. Ce qui reste flou
 
