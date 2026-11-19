@@ -109,10 +109,10 @@ Dans la section **Schemas**, en bas de la page : en ouvrant `SensorReading`, cha
 
 ## 7. Le rendu Git
 
-- Lien de la pull request : à compléter après son ouverture
-- Le tag `tp1` existe sur GitHub : à compléter après la fusion
+- Lien de la pull request : https://github.com/Sabrineloksairi/app-intelligente/pull/1
+- Le tag `tp1` existe sur GitHub : oui, créé sur `main` juste après la fusion de la pull request #1
 - Qui a relu la pull request, et quel commentaire a-t-il laissé ?
-  À compléter après la relecture
+  Aya Haffari l'a relue et approuvée : « Tests lancés (13 passed), vérification des fichiers et lecture de l'ADR 002. »
 
 ## 8. Ce qui reste flou
 
