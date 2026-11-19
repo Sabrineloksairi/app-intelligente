@@ -115,10 +115,11 @@ Dans la section **Schemas**, en bas de la page, sous `SensorReading` : chaque ch
 
 ## 7. Le rendu Git
 
-- Dépôt du groupe : https://github.com/Sabrineloksairi/app-intelligente/tree/main/tp/tp1/haffari (dépôt direct sur `main`, dossier `tp/tp1/haffari/`)
-- Ce TP a d'abord été fait sur mon dépôt personnel : pull request https://github.com/eyahaf2/maintai-tp/pull/3, tag `tp1` : oui
+- Lien de la pull request : https://github.com/Sabrineloksairi/app-intelligente/pull/1 (pull request du groupe pour le TP1, branche `tp1`, fusionnée dans `main`)
+- Le tag `tp1` existe sur GitHub : oui (il pointe sur la fusion de la pull request #1)
 - Qui a relu la pull request, et quel commentaire a-t-il laissé ?
-  Sur mon dépôt personnel, j'ai travaillé seule : je me suis relue moi-même avant de fusionner, avec ce commentaire : « Relu : 13 tests passent, aucun `.env`, `.venv` ni `models` dans les fichiers modifiés, l'ADR 002 justifie les bornes et le 503, le compte rendu est rempli. » Dans le dépôt de groupe, il n'y a pas de pull request : le dépôt se fait directement sur `main`.
+  Ma camarade Sabrine Loksairi a relu mon dossier `tp/tp1/haffari` et a laissé ce commentaire sur la pull request : « Relecture du dossier tp/tp1/haffari : tests lancés (18 passed, dont les 5 de test_casser), schéma avec bornes, ADR 002 présent, aucun .env, modèle ni CSV. Approuvé. » De mon côté, j'ai relu le dossier `tp/tp1/loksairi` de Sabrine (13 passed sur mon PC) et approuvé sa partie.
+- Ce TP avait d'abord été fait sur mon dépôt personnel (pull request https://github.com/eyahaf2/maintai-tp/pull/3, tag `tp1`).
 
 ## 8. Ce qui reste flou
 
