@@ -184,8 +184,11 @@ Non. Le rappel est un peu plus bas (0,741 contre 0,750), la précision un peu pl
 
 ## 7. Le rendu Git
 
-- Lien de la pull request : À COMPLÉTER
-- Le tag `tp5` existe sur GitHub : À COMPLÉTER (oui / non)
+- Lien de la pull request : https://github.com/Sabrineloksairi/app-intelligente/pull/5 (PR commune du groupe pour le TP5, branche `tp5`)
+- Le tag `tp5` existe sur GitHub : oui (créé par Sabrine Loksairi après la fusion de la PR)
+- PR relue par : Sabrine Loksairi
+- Son commentaire de relecture : « Relecture de tp/tp5/haffari : 32 passed sur mon PC, log_run enregistre les paramètres, data_md5, les métriques et le modèle, reçu data/sensors.csv.dvc présent, ADR 004 avec l'identifiant du run et le data_md5, aucun mlflow.db, mlruns, CSV ni cache DVC. »
+- Réciproquement, j'ai relu `tp/tp5/loksairi` : 32 passed (dataset et tests lancés), `tracking.py` et ADR 004 relus, reçu `sensors.csv.dvc` présent, aucun `mlflow.db`, `mlruns`, `.env`, CSV ni cache DVC, puis approbation de la PR #5
 - `git status` avant le commit : `mlflow.db`, `mlruns/`, `data/sensors.csv` ou `.dvc/cache` apparaissaient-ils ? non : `git check-ignore -v` les montre exclus par le `.gitignore` (et `.dvc/config.local` par `.dvc/.gitignore`), et `git status --short` est vide.
 
 ## 8. Ce qui reste flou
