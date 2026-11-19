@@ -1,166 +1,119 @@
-# Compte rendu · TP3 : une interface Streamlit pour MaintAI
+# Compte rendu · TP1 : une API de prédiction pour MaintAI
 
-**Groupe :** À COMPLÉTER  ·  **Membres :** Aya, À COMPLÉTER  ·  **Date :** 12/11/2026
+**Groupe :** Sabrine Loksairi, Aya Haffari, Mohamed Amine Farih, Yasser Rais  ·  **Rédigé par :** Sabrine Loksairi  ·  **Date :** 19/11/2026
 
 ---
 
-## 1. Mise en place (dans `TP/TP3`)
+## 1. Mise en place
 
-Dernière ligne de `python -m pytest` juste après la mise en place :
-
-```
-5 failed, 18 passed
-```
-
-Quels fichiers de tests échouent, et quelle erreur donnent-ils ?
-
-`tests/test_ui.py` (2 tests) et `tests/test_client.py` (3 tests) échouent. Dans `test_client.py`, `MaintaiClient.predict` lève `NotImplementedError` car son corps n'est pas encore écrit. Dans `test_ui.py`, la page n'affiche pas encore d'indicateur (`at.metric[0]` n'existe pas) ni de résultat de prédiction. Les 18 autres tests (TP1 et TP2 : données, entraînement, API, sécurité) passent.
-
-## 2. Lancer Streamlit
-
-Lancez d'abord `streamlit run ui/app.py`. Que s'affiche-t-il dans le navigateur ?
+Dernière ligne de `python -m pytest`, juste après la mise en place (rien n'est encore écrit) :
 
 ```
-ModuleNotFoundError: No module named 'maintai'
+=================== 3 failed, 10 passed, 1 warning in 1.10s ====================
 ```
 
-![Erreur ModuleNotFoundError avec streamlit run](captures/01_erreur_modulenotfound.png)
+Dans `tests/test_api.py`, 4 tests sur 7 passent déjà alors que rien n'est écrit. Lesquels ? Pour les deux tests qui attendent un code 422, expliquez pourquoi ils passent « pour une mauvaise raison » (indice : regardez `extra="forbid"` dans `schemas.py`).
 
-Lancez ensuite `python -m streamlit run ui/app.py`. Pourquoi cette commande fonctionne-t-elle et pas la première ?
+Les 4 tests qui passent sont :
 
-Python cherche les modules dans une liste de dossiers (`sys.path`) qui dépend de la façon de lancer. Avec `streamlit run ui/app.py`, le premier dossier est celui du script (`TP3/ui/`) : le dossier `maintai/` n'y est pas, donc l'import échoue. Avec `python -m streamlit ...`, Python ajoute le dossier courant (`TP3/`) à la liste : `maintai/` y est, l'import réussit.
+- `test_health`
+- `test_out_of_range_value_is_rejected`
+- `test_missing_field_is_rejected`
+- `test_openapi_documents_predict`
 
-![La page s'affiche avec python -m streamlit run](captures/02_page_python_m_streamlit.png)
+Les deux tests qui attendent un 422 sont `test_out_of_range_value_is_rejected` et `test_missing_field_is_rejected`. Ils passent pour une mauvaise raison : le schéma est vide et `extra="forbid"` refuse tout champ inconnu. Chaque champ envoyé est donc rejeté, même dans un relevé valide. Le 422 ne prouve ni que 500 °C est hors bornes, ni que l'absence de `load_pct` est détectée.
 
-## 3. Sprint 1 : l'onglet « Données »
+## 2. Le schéma d'entrée (`maintai/api/schemas.py`)
 
-Votre code de l'onglet « Données » (de `c1, c2, c3 = ...` jusqu'au nuage de points) :
+| Variable | Type | Minimum (`ge`) | Maximum (`le`) | Justification physique (pas le min / max des données) |
+|---|---|---:|---:|---|
+| `temperature_c` | `float` | -40 | 150 | Bornes données par l'énoncé : démarrage à froid d'un côté, surchauffe extrême de l'autre. |
+| `vibration_mm_s` | `float` | 0 | 100 | Une vitesse efficace n'est jamais négative. La zone D de la norme ISO 20816-3 commence entre 4,5 et 7,1 mm/s sur support rigide : 100 mm/s accepte donc les machines très dégradées. |
+| `load_pct` | `float` | 0 | 150 | 0 % correspond à une machine à vide, et une surcharge au-delà de 100 % reste possible. Au-delà de 150 %, la lecture est considérée comme aberrante. |
+| `runtime_hours` | `float` | 0 | 200000 | Un compteur d'heures n'est jamais négatif. 200 000 h représentent environ 23 ans de fonctionnement continu. |
+
+Après avoir écrit `schemas.py` seul, que donne `python -m pytest`, et quel est le message d'erreur des tests qui échouent ? Pourquoi est-ce un bon signe ?
+
+```
+FAILED tests/test_api.py::test_predict_returns_probability - NotImplementedError
+FAILED tests/test_api.py::test_high_risk_reading_raises_alert - NotImplemente...
+FAILED tests/test_api.py::test_503_when_model_missing - NotImplementedError
+=================== 3 failed, 10 passed, 1 warning in 2.08s ====================
+```
+
+C'est un bon signe, car l'erreur a changé : les relevés valides ne sont plus refusés par un 422. Ils franchissent la validation et arrivent jusqu'à `predict()`, la seule partie qui reste à écrire.
+
+## 3. La fonction `predict()` (`maintai/api/main.py`)
+
+Votre code :
 
 ```python
-c1, c2, c3 = st.columns(3)
-c1.metric("Relevés", len(df))
-c2.metric("Taux de panne", f"{df.failure.mean():.1%}")
-c3.metric("Température moyenne", f"{df.temperature_c.mean():.1f} °C")
-
-variable = st.selectbox("Variable", FEATURES)
-tranches = pd.cut(df[variable], bins=10)
-taux = df.groupby(tranches, observed=True).failure.mean()
-taux.index = [round(i.mid) for i in taux.index]  # le milieu de chaque tranche
-st.subheader(f"Taux de panne selon {variable}")
-st.bar_chart(taux)
-
-st.subheader("Température et vibration (500 relevés)")
-echantillon = df.sample(500, random_state=0).assign(
-    panne=lambda d: d.failure.map({0: "non", 1: "oui"})
-)
-st.scatter_chart(echantillon, x="temperature_c", y="vibration_mm_s", color="panne")
+predictor = state.get("predictor")
+if predictor is None:
+    raise HTTPException(
+        status_code=503,
+        detail="Modèle non chargé : lancez python -m maintai.train, puis redémarrez l'API.",
+    )
+return PredictionOut(**predictor.predict(reading.model_dump()))
 ```
 
-| Indicateur | Valeur affichée |
-|---|---|
-| Relevés | 5000 |
-| Taux de panne | 13.6 % |
-| Température moyenne | 59.7 °C |
+Pourquoi répondre **503** et pas 500 quand le modèle manque ?
 
-Choisissez `vibration_mm_s` dans la liste. Comment évolue le taux de panne quand la vibration augmente ?
+Le code 500 signale un bug imprévu dans le serveur. Ici, la situation est connue : la requête est correcte, mais le service ne peut pas y répondre tant que le modèle n'est pas disponible. Le code 503 le dit clairement, et le message indique comment corriger le problème.
 
-Le taux de panne reste presque nul pour les vibrations faibles (1 et 3 mm/s), puis augmente très vite : environ 0.32 à 6 mm/s, 0.67 à 8 mm/s, 0.83 à 10 mm/s, et il se stabilise vers 0.87 à partir de 12 mm/s. En choisissant `temperature_c`, le taux monte beaucoup plus lentement avec la température et reste nettement plus bas que celui de la vibration. La vibration est donc la variable qui compte le plus ici. (À VÉRIFIER sur ton écran : relis les valeurs sur ton graphique ou avec l'icône « tableau », et corrige si besoin.)
+Pourquoi le modèle est-il chargé **une seule fois**, au démarrage, et pas à chaque requête ?
 
-![Taux de panne selon vibration_mm_s](captures/03_barres_vibration.png)
+Lire le modèle sur le disque prend du temps. En le chargeant une seule fois, chaque requête réutilise le modèle déjà en mémoire : les réponses sont plus rapides, et toutes les requêtes utilisent la même version.
 
-![Nuage de points température / vibration](captures/04_nuage_de_points.png)
+## 4. Les tests
 
-Ajoutez un `print("relance")` en haut de `ui/app.py`, puis déplacez un curseur. Que voyez-vous dans le terminal, et qu'est-ce que cela montre sur le fonctionnement de Streamlit ?
-
-Le mot « relance » s'affiche dans le terminal à chaque interaction avec un widget (changement de variable dans la liste, etc.). Cela montre que Streamlit réexécute tout le script `ui/app.py` de la première à la dernière ligne à chaque interaction. Les curseurs du formulaire (`st.form`) ne relancent rien tant qu'on n'a pas cliqué sur « Prédire ».
-
-À quoi sert `@st.cache_data` sur la fonction `charger` ?
-
-Comme le script est relancé à chaque clic, sans cache le CSV serait relu depuis le disque à chaque fois. Avec `@st.cache_data`, il n'est lu qu'une seule fois : les relances suivantes réutilisent le tableau gardé en mémoire, et la page reste rapide.
-
-## 4. Sprint 2 : l'onglet « Prédiction »
-
-Votre méthode `predict` (`maintai/client.py`) :
-
-```python
-def predict(self, reading: dict) -> dict:
-    """Envoie un relevé ; lève APIError si l'API refuse, httpx.HTTPError si elle est injoignable."""
-    headers = {"X-API-Key": self.api_key} if self.api_key else {}
-    r = self.http.post("/v1/predict", json=reading, headers=headers)
-    if r.status_code != 200:
-        raise APIError(r.status_code, r.json().get("detail"))
-    return r.json()
-```
-
-Et le bloc `if envoye:` de `ui/app.py` :
-
-```python
-if envoye:
-    try:
-        res = MaintaiClient(url, api_key=cle).predict(releve)
-    except APIError as e:
-        st.warning(f"Erreur {e.status_code} : {e.detail}")
-    except httpx.HTTPError:
-        st.error("API injoignable : uvicorn est-il lancé ?")
-    else:
-        pct = round(res["failure_probability"] * 100)
-        st.metric("Probabilité de panne", f"{pct} %")
-        if res["alert"]:
-            st.error(f"ALERTE : au-dessus du seuil {res['threshold']}")
-        else:
-            st.success(f"Normal : sous le seuil {res['threshold']}")
-```
-
-Dernière ligne de `python -m pytest` à la fin du sprint 2 :
+Dernière ligne de `python -m pytest` à la fin du TP :
 
 ```
-23 passed
+==================== 13 passed, 1 warning in 1.78s =====================
 ```
 
-Avec l'API lancée (`uvicorn maintai.api.main:app --reload --env-file .env`) :
+![13 tests réussis](captures/01_pytest_13_passed.png)
 
-| Essai | Ce qu'affiche Streamlit |
-|---|---|
-| valeurs par défaut, bonne clé | Probabilité de panne : 95 % et un encadré rouge « ALERTE : au-dessus du seuil 0.3 » |
-| valeurs par défaut, fausse clé | Un encadré jaune « Erreur 401 : Clé API absente ou invalide » |
-| API arrêtée (Ctrl+C dans le terminal d'uvicorn) | Un encadré rouge « API injoignable : uvicorn est-il lancé ? » |
+## 5. L'API en marche
 
-**Essai 1 : bonne clé** (95 % et alerte)
+Après `python -m maintai.dataset` et `python -m maintai.train`, lancez `uvicorn maintai.api.main:app --reload`, puis envoyez ces requêtes depuis `/docs` (ou avec `curl.exe`).
 
-![Prédiction avec la bonne clé](captures/05_prediction_95_alerte.png)
+| Requête | Code obtenu | Réponse (le corps JSON) |
+|---|---:|---|
+| `GET /health` | 200 | `{"status":"ok","model_loaded":true}` |
+| `POST /v1/predict` avec `{"temperature_c": 72.5, "vibration_mm_s": 6.1, "load_pct": 85, "runtime_hours": 15000}` | 200 | `{"failure_probability":0.9553,"alert":true,"threshold":0.3,"model_version":"2026-11-19T00:31:30Z"}` |
+| `POST /v1/predict` avec une température de 500 | 422 | `{"detail":[{"type":"less_than_equal","loc":["body","temperature_c"],"msg":"Input should be less than or equal to 150","input":500,"ctx":{"le":150.0}}]}` |
+| `POST /v1/predicte` (faute de frappe dans l'adresse) | 404 | `{"detail":"Not Found"}` |
 
-**Essai 2 : fausse clé** (erreur 401)
+`model_version` est la date de l'entraînement : cette valeur change à chaque nouvel entraînement.
 
-![Erreur 401 avec une fausse clé](captures/06_erreur_401.png)
+![Erreur 422 pour une température de 500 °C dans /docs](captures/02_docs_422.png)
 
-**Essai 3 : API arrêtée**
+Dans `/docs`, où voit-on les bornes que vous avez choisies ?
 
-![API injoignable](captures/07_api_injoignable.png)
+Dans la section **Schemas**, en bas de la page : en ouvrant `SensorReading`, chaque champ affiche son type, son minimum, son maximum et sa description. On les retrouve aussi dans l'onglet **Schema** du corps de la requête `POST /v1/predict`.
 
-Le port 8501 n'est pas dans `MAINTAI_CORS_ORIGINS`, et pourtant la prédiction fonctionne. Pourquoi ?
+## 6. Questions de compréhension
 
-CORS est une règle appliquée par le navigateur. Dans la page HTML du TP2, c'est le navigateur qui exécute `fetch(...)` : il envoie une requête de permission (OPTIONS avec l'en-tête `Origin`) et bloque la réponse si l'origine n'est pas dans la liste de l'API. Dans Streamlit, le navigateur n'appelle jamais l'API : il affiche seulement la page. C'est le serveur Streamlit, un programme Python, qui envoie la requête via `httpx`, sans en-tête `Origin` ni contrôle CORS (comme `curl` ou le programme Java). La clé API reste vérifiée par l'API, et c'est elle qui protège l'accès.
+1. REST et FastAPI : quelle est la différence ?
+   REST est un ensemble de règles pour concevoir une API web. FastAPI est une bibliothèque Python qui permet d'écrire une API respectant ces règles.
+2. Le schéma Pydantic sert à trois choses. Lesquelles ?
+   Il valide les données reçues, génère la documentation de `/docs` et fournit à la fonction un objet Python typé.
+3. Dans `http://localhost:8000/v1/predict`, que désignent `localhost`, `8000` et `/v1/predict` ?
+   `localhost` désigne la machine elle-même, `8000` le port sur lequel uvicorn écoute, et `/v1/predict` la route définie dans le code.
+4. Pourquoi `/v1` dans l'adresse ?
+   C'est la version de l'API. Le contrat peut ainsi évoluer dans une future version `/v2` sans casser les clients qui utilisent `/v1`.
+5. Dans la commande `uvicorn maintai.api.main:app`, que désignent `maintai.api.main` et `app` ?
+   `maintai.api.main` désigne le fichier `maintai/api/main.py`, et `app` la variable de ce fichier qui contient l'application FastAPI.
 
-## 5. Questions de compréhension
+## 7. Le rendu Git
 
-1. Dans la page web du TP2, qui envoie la requête à l'API ? Et dans Streamlit ?
+- Lien de la pull request : à compléter après son ouverture
+- Le tag `tp1` existe sur GitHub : à compléter après la fusion
+- Qui a relu la pull request, et quel commentaire a-t-il laissé ?
+  À compléter après la relecture
 
-   Dans la page du TP2, c'est le navigateur de l'utilisateur (via le JavaScript `fetch`). Dans Streamlit, c'est le serveur Streamlit (Python, avec `MaintaiClient` et `httpx`) ; le navigateur ne parle qu'à Streamlit.
+## 8. Ce qui reste flou
 
-2. Pourquoi les tests de `test_client.py` n'ont-ils pas besoin d'uvicorn ?
-
-   Parce que `MaintaiClient` accepte un client HTTP en paramètre (`http=client`). Les tests lui passent le `TestClient` de FastAPI, qui envoie la requête directement à l'application en mémoire, sans réseau ni serveur. Le code testé est le même, seul le transport change.
-
-3. Page HTML + JavaScript (TP2) ou Streamlit (TP3) : laquelle choisiriez-vous pour une démonstration à un client ? Et pour l'application d'un technicien de maintenance ? Pourquoi ?
-
-   Pour une démonstration à un client, je choisirais la page HTML + JavaScript : l'apparence est entièrement personnalisable et elle donne une image plus « produit », mais elle demande du JavaScript et la gestion de CORS. Pour l'outil d'un technicien, je choisirais Streamlit : il se construit en quelques heures en Python (graphiques et formulaires inclus), il n'y a pas de CORS à gérer, et l'apparence compte moins que la rapidité de mise en place.
-
-## 6. Le rendu Git
-
-- Lien de la pull request : À COMPLÉTER
-- Le tag `tp3` existe sur GitHub : À COMPLÉTER (oui / non)
-- `git status` avant le commit : `.env`, `data/` ou `models/` apparaissaient-ils ? non (ils sont exclus par le `.gitignore`)
-
-## 7. Ce qui reste flou
-
-À COMPLÉTER (une ou deux phrases honnêtes, par exemple : « la différence entre `streamlit run` et `python -m streamlit run` », ou « comment `st.form` évite les relances »).
+Je dois encore approfondir le comportement du modèle quand une valeur acceptée par l'API sort du domaine d'entraînement, par exemple 150 000 heures de fonctionnement. Je me demande aussi comment renvoyer proprement un code 422 pour la valeur `NaN`, qui provoque aujourd'hui une erreur 500.
