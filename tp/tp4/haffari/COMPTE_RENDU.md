@@ -150,7 +150,8 @@ Le modèle est un objet scikit-learn sauvegardé avec joblib : il n'est garanti 
 
 - Lien de la pull request : https://github.com/Sabrineloksairi/app-intelligente/pull/4 (PR commune du groupe pour le TP4, branche `tp4`)
 - Le tag `tp4` existe sur GitHub : oui (créé par Sabrine Loksairi après la fusion de la PR)
-- PR relue par : Sabrine Loksairi (relecture de `tp/tp4/haffari`, puis approbation)
+- Son commentaire de relecture : « Relecture de tp/tp4/haffari : 27 passed après pip install -e ., pyproject.toml avec dependencies et maintai-predict, wheel non commité (ni dist, ni build, ni egg-info), aucun .env, modèle ni CSV. »
+- Réciproquement, j'ai relu `tp/tp4/loksairi` : 27 passed (dataset, entraînement, installation du package et tests lancés), aucun `dist`, `build`, `egg-info`, `.env` ni modèle, puis approbation de la PR #4
 - `git status` avant le commit : `dist/`, `build/` ou `maintai.egg-info/` apparaissaient-ils ? non (exclus par le `.gitignore` du starter)
 
 ## 6. Ce qui reste flou
