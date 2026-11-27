@@ -146,9 +146,10 @@ Dans `docs/adr/004-choix-du-modele.md` : régression logistique, `C = 1.0`, seui
 
 ## 7. Le rendu Git
 
-- Lien de la pull request : à compléter après son ouverture
-- Le tag `tp5` existe sur GitHub : à compléter après la fusion
+- Lien de la pull request : https://github.com/Sabrineloksairi/app-intelligente/pull/5
+- Le tag `tp5` existe sur GitHub : oui, créé sur `main` juste après la fusion de la pull request #5
 - `git status` avant le commit : `mlflow.db`, `mlruns/`, `data/sensors.csv` ou `.dvc/cache` apparaissaient-ils ? non
+- Relecture : Aya Haffari a relu et approuvé mon dossier. Son commentaire : « Relecture du dossier tp/tp5/loksairi : tests lancés (32 passed), tracking.py relu (log_run enregistre les paramètres, data_md5, les métriques et le modèle), ADR 004 présent avec le run et le data_md5, reçu sensors.csv.dvc présent, aucun mlflow.db, mlruns, .env, CSV ni cache DVC. Approuvé. » J'ai relu son dossier `tp/tp5/haffari` sur la même pull request (32 passed).
 
 ## 8. Ce qui reste flou
 
